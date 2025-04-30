@@ -1,11 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
-
-public class SpawnManager : MonoBehaviour
+public class Spare : MonoBehaviour
 {
     public GameObject obstacle;
     public GameObject obstaclePrefab;
@@ -40,3 +37,4 @@ public class SpawnManager : MonoBehaviour
         InvokeRepeating("SpawnObstacle", startDelay, repeatRate);
     }
 }
+
