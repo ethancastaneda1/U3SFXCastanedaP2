@@ -1,14 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 
 public class SpawnManager : MonoBehaviour
 {
-    public GameObject obstacle;
-    public GameObject obstaclePrefab;
+    public GameObject[] obstaclePrefab;
     private int obstacleIndex;
     private float startDelay = 2;
     private float repeatRate = 2;
@@ -28,11 +25,11 @@ public class SpawnManager : MonoBehaviour
     }
     void SpawnObstacle()
     {
-        obstacleIndex = Random.Range(0, 3);
+        obstacleIndex = Random.Range(0, 2);
 
         if (playerControllerScript.gameOver == false)
         {
-            Instantiate(obstaclePrefab, spawnPos, obstaclePrefab.transform.rotation);
+            Instantiate(obstaclePrefab[obstacleIndex], spawnPos, obstaclePrefab[obstacleIndex].transform.rotation);                               
         }
         repeatRate = Random.Range(1f, 2.5f);
         startDelay = Random.Range(1f, 2.5f);
