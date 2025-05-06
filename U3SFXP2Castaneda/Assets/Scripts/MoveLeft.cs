@@ -17,13 +17,21 @@ public class MoveLeft : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+
         if (playerControllerScript.gameOver == false)
         {
-            transform.Translate(Vector3.left * Time.deltaTime * speed);
-        }
-        //if( transform.position.x < leftBound && gameObject.CompareTag("Obstacle"))
-      // {
-          //  Destroy(gameObject);
-      //  }
-    }
+            if (playerControllerScript.isDashing == true)
+            {
+                transform.Translate(Vector3.left * speed * Time.deltaTime * playerControllerScript.dash);
+            }
+            else
+            {
+                transform.Translate(Vector3.left * speed * Time.deltaTime);
+            }
+            //if( transform.position.x < leftBound && gameObject.CompareTag("Obstacle"))
+            // {
+            //  Destroy(gameObject);
+            //  }
+        }   }   
 }

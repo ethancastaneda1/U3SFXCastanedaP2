@@ -144,9 +144,10 @@ MonoBehaviour:
   jumpSound: {fileID: 8300000, guid: 08ab7053d586c458db3774d33c141a4b, type: 3}
   crashSound: {fileID: 8300000, guid: 4bcde6de2166e41e284ec46d8a01fb90, type: 3}
   gravityModifier: 1.25
-  jumpForce: 500
-  isOnGround: 0
+  jumpForce: 600
+  isOnGround: 1
   gameOver: 0
+  hasDoubleJumped: 0
 --- !u!65 &56328474
 BoxCollider:
   m_ObjectHideFlags: 0

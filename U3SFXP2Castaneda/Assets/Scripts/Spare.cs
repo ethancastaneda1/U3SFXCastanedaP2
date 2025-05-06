@@ -4,37 +4,65 @@ using UnityEngine;
 
 public class Spare : MonoBehaviour
 {
-    public GameObject obstacle;
-    public GameObject obstaclePrefab;
-    private int obstacleIndex;
-    private float startDelay = 2;
-    private float repeatRate = 2;
-    private Vector3 spawnPos = new Vector3(25, 0, 0);
-    private PlayerController playerControllerScript;
+    private AudioSource playerAudio;
+    private Rigidbody playerRb;
+    private Animator playerAnim;
+    public ParticleSystem dirtParticle;
+    public ParticleSystem explosionParticle;
+    public AudioClip jumpSound;
+    public AudioClip crashSound;
+    public float gravityModifier;
+    public float jumpForce;
+    public bool isOnGround = true;
+    public bool gameOver = false;
     // Start is called before the first frame update
     void Start()
     {
-        InvokeRepeating("SpawnObstacle", startDelay, repeatRate);
-        playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+        playerRb = GetComponent<Rigidbody>();
+        Physics.gravity *= gravityModifier;
+        playerAnim = GetComponent<Animator>();
+        playerAudio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space) && isOnGround && !gameOver)
+        {
+            playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            isOnGround = false;
+
+            playerAnim.SetTrigger("Jump_trig");
+
+            dirtParticle.Stop();
+            playerAudio.PlayOneShot(jumpSound, 1.0f);
+
+
+        }
+
+
+
 
     }
-    void SpawnObstacle()
+    private void OnCollisionEnter(Collision collision)
     {
-        obstacleIndex = Random.Range(0, 3);
-
-        if (playerControllerScript.gameOver == false)
+        if (collision.gameObject.CompareTag("Ground"))
         {
-            Instantiate(obstaclePrefab, spawnPos, obstaclePrefab.transform.rotation);
+            isOnGround = true;
+            dirtParticle.Play();
         }
-        repeatRate = Random.Range(1f, 2.5f);
-        startDelay = Random.Range(1f, 2.5f);
-        CancelInvoke();
-        InvokeRepeating("SpawnObstacle", startDelay, repeatRate);
+        else if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            gameOver = true;
+            Debug.Log("Game Over!");
+            playerAnim.SetBool("Death_b", true);
+            playerAnim.SetInteger("DeathType_int", 1);
+            explosionParticle.Play();
+            dirtParticle.Stop();
+            playerAudio.PlayOneShot(crashSound, 1.0f);
+        }
+
+
     }
 }
 

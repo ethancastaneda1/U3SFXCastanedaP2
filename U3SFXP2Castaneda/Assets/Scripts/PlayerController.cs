@@ -17,6 +17,10 @@ public class PlayerController : MonoBehaviour
     public float jumpForce;
     public bool isOnGround = true;
     public bool gameOver = false;
+    public bool hasDoubleJumped = false;
+    public float dash = 2;
+    public bool isDashing = false;
+    public float animSpeed;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,22 +33,37 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            animSpeed = playerAnim.GetFloat("Speed_f") * dash;
+            playerAnim.SetFloat("Speed_f", animSpeed);
+            isDashing = true;
+        }
+        if (Input.GetKeyUp(KeyCode.B))
+        {
+            playerAnim.SetFloat("Speed_f", animSpeed / dash);
+            isDashing = false;
+        }
+       
         if (Input.GetKeyDown(KeyCode.Space) && isOnGround && !gameOver)
         {
             playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            isOnGround = false;
-
             playerAnim.SetTrigger("Jump_trig");
-
-            dirtParticle.Stop();
-            playerAudio.PlayOneShot(jumpSound, 1.0f);
-
+            playerAudio.PlayOneShot(jumpSound);
 
         }
+        else if (Input.GetKeyDown(KeyCode.Space) && !isOnGround && !gameOver && !hasDoubleJumped)
+        {
+            hasDoubleJumped = true;
+            playerRb.velocity = Vector3.zero;
+            playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            playerAnim.SetTrigger("Jump_trig");
+            playerAudio.PlayOneShot(jumpSound);
+        }
 
-        
-     
-        
+
+
+
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -52,6 +71,7 @@ public class PlayerController : MonoBehaviour
         {
             isOnGround = true;
             dirtParticle.Play();
+            hasDoubleJumped = false;
         }
         else if (collision.gameObject.CompareTag("Obstacle"))
         {
@@ -66,4 +86,5 @@ public class PlayerController : MonoBehaviour
         
       
     }
+    
 }
